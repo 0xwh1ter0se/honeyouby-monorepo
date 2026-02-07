@@ -10,6 +10,17 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Trust Proxy (Required for Vercel/Render/Heroku)
+app.set('trust proxy', 1);
+
+// Debug Middleware (Log every request origin)
+app.use((req, res, next) => {
+    console.log(`[Request] ${req.method} ${req.path}`);
+    console.log(`[Origin] ${req.headers.origin}`);
+    console.log(`[Frontend URL Env] ${process.env.FRONTEND_URL}`);
+    next();
+});
+
 // Middleware
 app.use(cors({
     origin: (origin, callback) => {

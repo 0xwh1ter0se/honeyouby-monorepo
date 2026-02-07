@@ -23,7 +23,7 @@ export async function authMiddleware(
 ) {
     try {
         const session = await auth.api.getSession({
-            headers: req.headers as Headers,
+            headers: req.headers as unknown as Headers,
         });
 
         if (session?.user) {

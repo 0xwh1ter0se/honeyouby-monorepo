@@ -1,7 +1,7 @@
 import { db } from "../config/database.js";
 import { products, productCategories, categories } from "../db/schema.js";
 import { eq, ilike, and, inArray } from "drizzle-orm";
-import slugify from "slugify";
+import { default as slugify } from "slugify";
 import { ApiError } from "../middleware/errorHandler.js";
 
 export interface CreateProductInput {

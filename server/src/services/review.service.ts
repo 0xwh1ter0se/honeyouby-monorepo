@@ -15,7 +15,7 @@ export class ReviewService {
         let query = db.select().from(reviews).where(eq(reviews.productId, productId));
 
         if (!includeUnapproved) {
-            query = query.where(and(eq(reviews.productId, productId), eq(reviews.isApproved, true))) as typeof query;
+            query = (query as any).where(and(eq(reviews.productId, productId), eq(reviews.isApproved, true)));
         }
 
         return await query.orderBy(desc(reviews.createdAt));
@@ -76,7 +76,7 @@ export class ReviewService {
         let query = db.select().from(reviews);
 
         if (options.approved !== undefined) {
-            query = query.where(eq(reviews.isApproved, options.approved)) as typeof query;
+            query = query.where(eq(reviews.isApproved, options.approved)) as any;
         }
 
         return await query.orderBy(desc(reviews.createdAt));

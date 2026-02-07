@@ -1,13 +1,18 @@
 import { useState, useEffect } from 'react';
 import { Plus } from 'lucide-react';
 import { fetchTransactions, resetData } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 import DailyHoneyPot from '../components/DailyHoneyPot';
 import QuickStats from '../components/QuickStats';
 import TransactionHistoryTable from '../components/TransactionHistoryTable';
 
 const Transactions = () => {
+    const { user } = useAuth();
     const [transactions, setTransactions] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+
+    // Check if user is owner or manager (not staff)
+    const canResetData = user?.role === 'owner' || user?.role === 'manager';
 
     useEffect(() => {
         const loadTransactions = async () => {
@@ -41,23 +46,26 @@ const Transactions = () => {
                 </div>
 
                 <div className="flex gap-3">
-                    <button
-                        onClick={async () => {
-                            if (confirm('ARE YOU SURE? This will delete ALL orders and transactions!')) {
-                                try {
-                                    const success = await resetData();
-                                    if (success) {
-                                        window.location.reload();
-                                    } else {
-                                        alert('Failed to reset');
-                                    }
-                                } catch (e) { alert('Failed to reset'); }
-                            }
-                        }}
-                        className="flex items-center gap-2 px-3 py-3 bg-red-50 text-red-600 border border-red-100 rounded-xl font-bold hover:bg-red-100 transition-all text-xs"
-                    >
-                        <span>Reset Data</span>
-                    </button>
+                    {/* Reset Data Button - Only visible for owner/manager */}
+                    {canResetData && (
+                        <button
+                            onClick={async () => {
+                                if (confirm('ARE YOU SURE? This will delete ALL orders and transactions!')) {
+                                    try {
+                                        const success = await resetData();
+                                        if (success) {
+                                            window.location.reload();
+                                        } else {
+                                            alert('Failed to reset');
+                                        }
+                                    } catch (e) { alert('Failed to reset'); }
+                                }
+                            }}
+                            className="flex items-center gap-2 px-3 py-3 bg-red-50 text-red-600 border border-red-100 rounded-xl font-bold hover:bg-red-100 transition-all text-xs"
+                        >
+                            <span>Reset Data</span>
+                        </button>
+                    )}
 
                     <button className="flex items-center gap-2 px-6 py-3 bg-gold hover:bg-gold-dark text-white rounded-xl font-bold shadow-lg shadow-gold/30 transition-all transform hover:-translate-y-0.5 active:translate-y-0">
                         <Plus size={18} />

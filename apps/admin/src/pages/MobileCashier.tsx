@@ -1,13 +1,50 @@
-import { Bell, TrendingUp, Plus, Minus, ShoppingBag, Receipt, Coffee } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Bell, TrendingUp, Plus, Minus, ShoppingBag, Receipt, Home, Layers, LayoutGrid } from 'lucide-react';
+import { fetchDashboardStats, fetchTransactions, DashboardStats, Transaction } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 const MobileCashier = () => {
-    // This component is designed to be shown only on mobile screens via routing or css media queries
+    const { user } = useAuth();
+    const [stats, setStats] = useState<DashboardStats | null>(null);
+    const [transactions, setTransactions] = useState<Transaction[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    const recentTransactions = [
-        { title: 'Penjualan Madu Asli', time: '10:45 AM • Tunai', amount: '+ Rp 150.000', type: 'in', icon: ShoppingBag },
-        { title: 'Beli Plastik Packing', time: '09:30 AM • Transfer', amount: '- Rp 25.000', type: 'out', icon: Receipt },
-        { title: 'Penjualan Royal Jelly', time: '09:15 AM • QRIS', amount: '+ Rp 300.000', type: 'in', icon: Coffee },
-    ];
+    useEffect(() => {
+        const loadData = async () => {
+            setLoading(true);
+            try {
+                const [statsData, txData] = await Promise.all([
+                    fetchDashboardStats('24h'),
+                    fetchTransactions({ limit: 5 })
+                ]);
+                setStats(statsData);
+                setTransactions(txData);
+            } catch (error) {
+                console.error('Failed to load mobile data', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadData();
+    }, []);
+
+    const formatCurrency = (amount: number) => {
+        return new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        }).format(amount).replace('IDR', 'Rp');
+    };
+
+    const formatTime = (dateStr: string) => {
+        const date = new Date(dateStr);
+        return date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    };
+
+    const getTransactionIcon = (type: string) => {
+        return type === 'income' ? ShoppingBag : Receipt;
+    };
 
     return (
         <div className="min-h-screen bg-gray-50 pb-24 md:hidden">
@@ -15,10 +52,12 @@ const MobileCashier = () => {
             <div className="bg-cream p-6 pb-20 rounded-b-[2rem]">
                 <div className="flex justify-between items-start mb-6">
                     <div className="flex items-center gap-3">
-                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=100&h=100" alt="Cashier" className="w-12 h-12 rounded-full border-2 border-white" />
+                        <div className="w-12 h-12 rounded-full border-2 border-white bg-gold flex items-center justify-center text-white font-bold text-lg">
+                            {user?.name?.charAt(0) || 'K'}
+                        </div>
                         <div>
                             <h2 className="font-bold text-lg text-brown-dark flex items-center gap-1">
-                                Halo, Kasir 1 <span className="text-xl">👋</span>
+                                Halo, {user?.name || 'Kasir'} <span className="text-xl">👋</span>
                             </h2>
                             <p className="text-xs text-brown/60 font-medium">Siap mencatat?</p>
                         </div>
@@ -32,12 +71,16 @@ const MobileCashier = () => {
                 <div className="bg-gradient-to-br from-gold to-orange-400 rounded-3xl p-6 text-white shadow-xl shadow-orange-200 relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-16 -mt-16 blur-2xl"></div>
 
-                    <p className="text-white/90 text-sm font-medium mb-1">Total Sesi Ini</p>
-                    <h1 className="text-4xl font-extrabold mb-4">Rp 1.250.000</h1>
+                    <p className="text-white/90 text-sm font-medium mb-1">Total Hari Ini</p>
+                    {loading ? (
+                        <div className="h-10 w-48 bg-white/20 rounded animate-pulse"></div>
+                    ) : (
+                        <h1 className="text-4xl font-extrabold mb-4">{formatCurrency(stats?.income || 0)}</h1>
+                    )}
 
                     <div className="inline-flex items-center gap-2 bg-white/20 px-3 py-1.5 rounded-full text-xs font-bold backdrop-blur-md">
                         <TrendingUp size={14} />
-                        <span>+12% dari kemarin</span>
+                        <span>{stats?.orderCount || 0} Transaksi</span>
                     </div>
                 </div>
             </div>
@@ -66,22 +109,63 @@ const MobileCashier = () => {
                 </div>
 
                 <div className="space-y-3">
-                    {recentTransactions.map((tx, idx) => (
-                        <div key={idx} className="bg-white p-4 rounded-2xl flex items-center gap-4 shadow-sm">
-                            <div className={`w-12 h-12 rounded-full flex items-center justify-center ${tx.type === 'in' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'
-                                }`}>
-                                <tx.icon size={20} />
+                    {loading ? (
+                        // Loading skeleton
+                        [1, 2, 3].map((i) => (
+                            <div key={i} className="bg-white p-4 rounded-2xl flex items-center gap-4 shadow-sm animate-pulse">
+                                <div className="w-12 h-12 rounded-full bg-gray-200"></div>
+                                <div className="flex-1">
+                                    <div className="h-4 w-24 bg-gray-200 rounded mb-2"></div>
+                                    <div className="h-3 w-16 bg-gray-100 rounded"></div>
+                                </div>
+                                <div className="h-4 w-20 bg-gray-200 rounded"></div>
                             </div>
-                            <div className="flex-1">
-                                <h4 className="font-bold text-brown-dark text-sm">{tx.title}</h4>
-                                <p className="text-[10px] text-gray-400 font-medium">{tx.time}</p>
-                            </div>
-                            <span className={`font-bold text-sm ${tx.type === 'in' ? 'text-green-600' : 'text-red-600'}`}>
-                                {tx.amount}
-                            </span>
+                        ))
+                    ) : transactions.length === 0 ? (
+                        <div className="bg-white p-6 rounded-2xl text-center text-gray-400">
+                            <p>Belum ada transaksi hari ini</p>
                         </div>
-                    ))}
+                    ) : (
+                        transactions.map((tx) => {
+                            const Icon = getTransactionIcon(tx.type);
+                            return (
+                                <div key={tx.id} className="bg-white p-4 rounded-2xl flex items-center gap-4 shadow-sm">
+                                    <div className={`w-12 h-12 rounded-full flex items-center justify-center ${tx.type === 'income' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'
+                                        }`}>
+                                        <Icon size={20} />
+                                    </div>
+                                    <div className="flex-1">
+                                        <h4 className="font-bold text-brown-dark text-sm">{tx.description || (tx.type === 'income' ? 'Pemasukan' : 'Pengeluaran')}</h4>
+                                        <p className="text-[10px] text-gray-400 font-medium">{formatTime(tx.createdAt)} • {tx.paymentMethod || 'Tunai'}</p>
+                                    </div>
+                                    <span className={`font-bold text-sm ${tx.type === 'income' ? 'text-green-600' : 'text-red-600'}`}>
+                                        {tx.type === 'income' ? '+' : '-'} {formatCurrency(tx.amount)}
+                                    </span>
+                                </div>
+                            );
+                        })
+                    )}
                 </div>
+            </div>
+
+            {/* Bottom Navigation */}
+            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-6 py-3 flex justify-around items-center md:hidden">
+                <button className="flex flex-col items-center gap-1 text-gold">
+                    <Home size={22} />
+                    <span className="text-[10px] font-bold">Home</span>
+                </button>
+                <button className="flex flex-col items-center gap-1 text-gray-400">
+                    <Receipt size={22} />
+                    <span className="text-[10px] font-medium">Kas</span>
+                </button>
+                <button className="flex flex-col items-center gap-1 text-gray-400">
+                    <Layers size={22} />
+                    <span className="text-[10px] font-medium">Stok</span>
+                </button>
+                <button className="flex flex-col items-center gap-1 text-gray-400">
+                    <LayoutGrid size={22} />
+                    <span className="text-[10px] font-medium">Menu</span>
+                </button>
             </div>
         </div>
     );

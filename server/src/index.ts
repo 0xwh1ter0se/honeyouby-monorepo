@@ -30,8 +30,16 @@ app.use(cors({
 }));
 app.use(express.json());
 
+import { toNodeHandler } from "better-auth/node";
+import { auth } from "./config/auth.js";
+
+// ...
+
 // Auth middleware (attaches user to request if authenticated)
 app.use(authMiddleware);
+
+// Better Auth Handler (Mounted directly to preserve full path)
+app.all("/api/auth/*", toNodeHandler(auth));
 
 // API Routes
 app.use("/api", routes);

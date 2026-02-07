@@ -134,6 +134,20 @@ export const createTransaction = async (data: {
     }
 };
 
+// Reset All Data (Dev Tool)
+export const resetData = async (): Promise<boolean> => {
+    try {
+        const res = await fetch(`${API_BASE}/finance/reset`, {
+            method: 'DELETE',
+        });
+        if (!res.ok) throw new Error('Failed to reset data');
+        return true;
+    } catch (error) {
+        console.error('Error resetting data:', error);
+        return false;
+    }
+};
+
 // Daily Reports
 export const fetchDailyReports = async (limit: number = 30): Promise<DailyReport[]> => {
     try {

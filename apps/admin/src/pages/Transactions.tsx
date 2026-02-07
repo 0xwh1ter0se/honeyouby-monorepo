@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Plus } from 'lucide-react';
-import { fetchTransactions } from '../services/api';
+import { fetchTransactions, resetData } from '../services/api';
 import DailyHoneyPot from '../components/DailyHoneyPot';
 import QuickStats from '../components/QuickStats';
 import TransactionHistoryTable from '../components/TransactionHistoryTable';
@@ -45,8 +45,12 @@ const Transactions = () => {
                         onClick={async () => {
                             if (confirm('ARE YOU SURE? This will delete ALL orders and transactions!')) {
                                 try {
-                                    await fetch('http://localhost:3001/api/finance/reset', { method: 'DELETE' });
-                                    window.location.reload();
+                                    const success = await resetData();
+                                    if (success) {
+                                        window.location.reload();
+                                    } else {
+                                        alert('Failed to reset');
+                                    }
                                 } catch (e) { alert('Failed to reset'); }
                             }
                         }}

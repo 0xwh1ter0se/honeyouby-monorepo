@@ -1,7 +1,8 @@
 import { db } from "../config/database.js";
 import { categories } from "../db/schema.js";
 import { eq } from "drizzle-orm";
-import { default as slugify } from "slugify";
+import _slugify from "slugify";
+const slugify = _slugify as any;
 import { ApiError } from "../middleware/errorHandler.js";
 
 export interface CreateCategoryInput {

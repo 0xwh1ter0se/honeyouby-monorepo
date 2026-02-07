@@ -1,7 +1,8 @@
 import { db } from "../config/database.js";
 import { blogs } from "../db/schema.js";
 import { eq, desc, and } from "drizzle-orm";
-import { default as slugify } from "slugify";
+import _slugify from "slugify";
+const slugify = _slugify as any;
 import { ApiError } from "../middleware/errorHandler.js";
 
 export interface CreateBlogInput {

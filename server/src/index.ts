@@ -76,10 +76,12 @@ app.get("/api/debug", async (req, res) => {
 // Error handler (must be last)
 app.use(errorHandler);
 
-// Start server
-app.listen(PORT, () => {
-    console.log(`🍠 HoneyOuby API server running on http://localhost:${PORT}`);
-    console.log(`📚 API routes available at http://localhost:${PORT}/api`);
-});
-
+// Start server if not running on Vercel
+if (process.env.VERCEL !== '1') {
+    app.listen(PORT, () => {
+        console.log(`🍠 HoneyOuby API server running on http://localhost:${PORT}`);
+        console.log(`📚 API routes available at http://localhost:${PORT}/api`);
+    });
+}
+// Vercel requires exporting the app
 export default app;

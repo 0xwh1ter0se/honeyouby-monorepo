@@ -35,7 +35,9 @@ export const auth = betterAuth({
         }
     },
     trustedOrigins: [
-        "https://honeyouby-admin.vercel.app", // HARDCODED FIX
+        "https://honeyouby-admin.vercel.app", // Admin
+        "https://honeyouby.netlify.app", // Customer Web (Netlify)
+        "https://honeyouby-web.vercel.app", // Customer Web (Vercel - just in case)
         process.env.FRONTEND_URL || "http://localhost:5173",
         "http://localhost:5174",
         "http://localhost:5175",

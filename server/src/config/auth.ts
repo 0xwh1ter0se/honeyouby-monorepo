@@ -24,6 +24,16 @@ export const auth = betterAuth({
             maxAge: 5 * 60, // 5 minutes
         },
     },
+    advanced: {
+        cookiePrefix: "honeyouby-auth",
+        crossSubdomainCookies: {
+            enabled: true
+        },
+        defaultCookieAttributes: {
+            sameSite: "none",
+            secure: true
+        }
+    },
     trustedOrigins: [
         process.env.FRONTEND_URL || "http://localhost:5173",
         "http://localhost:5174",

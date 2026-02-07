@@ -23,26 +23,7 @@ app.use((req, res, next) => {
 
 // Middleware
 app.use(cors({
-    origin: (origin, callback) => {
-        const allowedOrigins = [
-            ...(process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',') : ["http://localhost:5173"]),
-            "http://localhost:5174",
-            "http://localhost:5175",
-            "http://localhost:5176",
-            "http://127.0.0.1:5173",
-            "http://127.0.0.1:5174"
-        ];
-
-        // Allow requests with no origin (like mobile apps or curl requests)
-        if (!origin) return callback(null, true);
-
-        if (allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.includes("*")) {
-            callback(null, true);
-        } else {
-            console.log("Blocked by CORS:", origin);
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
+    origin: true, // REFLECT REQUEST ORIGIN (Temp Fix for Debugging)
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "Cookie"]

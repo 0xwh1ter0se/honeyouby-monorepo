@@ -38,6 +38,20 @@ export const orderApi = {
     updateOrderStatus: async (id, status) => {
         return apiClient.patch(`/orders/${id}/status`, { status });
     },
+
+    /**
+     * Mark order as received (Customer)
+     */
+    receiveOrder: async (id) => {
+        return apiClient.patch(`/orders/${id}/receive`);
+    },
+
+    /**
+     * Submit order rating (Customer)
+     */
+    submitRating: async (id, ratingData) => {
+        return apiClient.post(`/orders/${id}/rating`, ratingData);
+    },
 };
 
 export default orderApi;

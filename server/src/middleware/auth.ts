@@ -9,7 +9,7 @@ declare global {
                 id: string;
                 email: string;
                 name: string | null;
-                role: "customer" | "admin";
+                role: "customer" | "admin" | "owner" | "staff";
             };
         }
     }
@@ -31,7 +31,7 @@ export async function authMiddleware(
                 id: session.user.id,
                 email: session.user.email,
                 name: session.user.name || null,
-                role: (session.user as { role?: string }).role as "customer" | "admin" || "customer",
+                role: (session.user as { role?: string }).role as "customer" | "admin" | "owner" | "staff" || "customer",
             };
         }
 

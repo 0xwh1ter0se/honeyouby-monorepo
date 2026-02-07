@@ -32,6 +32,27 @@ async function seed() {
             .where(eq(users.email, "admin@honeyouby.com"));
         console.log("👑 Admin role assigned");
 
+        // Create Staff User
+        console.log("👤 Creating staff user...");
+        try {
+            await auth.api.signUpEmail({
+                body: {
+                    email: "staff@honeyouby.com",
+                    password: "staffho12",
+                    name: "Staff HoneyOuby",
+                }
+            });
+            console.log("✅ Staff user created: staff@honeyouby.com / staffho12");
+        } catch (e) {
+            console.log("ℹ️ Staff user might already exist");
+        }
+
+        // Force update role to staff
+        await db.update(users)
+            .set({ role: "staff" })
+            .where(eq(users.email, "staff@honeyouby.com"));
+        console.log("👷 Staff role assigned");
+
         console.log("🗑️ Clearing existing product categories...");
         await db.delete(productCategories);
 

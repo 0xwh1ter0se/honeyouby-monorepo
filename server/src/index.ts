@@ -49,6 +49,30 @@ app.get("/health", (req, res) => {
     res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
+import { db } from "./config/database.js";
+import { users } from "./db/schema.js";
+
+// Debug Endpoint (Temporary)
+app.get("/api/debug", async (req, res) => {
+    try {
+        const userCount = await db.select().from(users).limit(1);
+        res.json({
+            status: "connected",
+            db_url_set: !!process.env.DATABASE_URL,
+            db_url_prefix: process.env.DATABASE_URL?.substring(0, 15) + "...",
+            user_count_check: userCount.length,
+            frontend_url: process.env.FRONTEND_URL,
+            better_auth_url: process.env.BETTER_AUTH_URL
+        });
+    } catch (error: any) {
+        res.status(500).json({
+            status: "error",
+            message: error.message,
+            stack: error.stack
+        });
+    }
+});
+
 // Error handler (must be last)
 app.use(errorHandler);
 

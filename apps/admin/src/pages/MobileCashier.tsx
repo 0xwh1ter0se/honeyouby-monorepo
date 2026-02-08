@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Bell, TrendingUp, Plus, Minus, ShoppingBag, Receipt, Home, Layers, LayoutGrid } from 'lucide-react';
-import { fetchDashboardStats, fetchTransactions, DashboardStats, Transaction } from '../services/api';
+import { fetchDashboardStats, fetchTransactions, type DashboardStats, type Transaction } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
 const MobileCashier = () => {

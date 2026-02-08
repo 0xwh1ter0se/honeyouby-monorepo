@@ -21,7 +21,7 @@ export default function ProductHero() {
                             initial={{ x: -50, opacity: 0 }}
                             animate={{ x: 0, opacity: 1 }}
                             transition={{ duration: 0.6 }}
-                            className="text-6xl md:text-8xl font-black text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] tracking-wide"
+                            className="text-4xl md:text-8xl font-black text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] tracking-wide"
                         >
                             Honey<span className="text-secondary text-yellow-400">Ouby!</span>
                         </motion.h1>

@@ -83,7 +83,7 @@ export default function MenuSection({ addToCart }) {
                         <p className="mt-4 text-gray-500">Loading products...</p>
                     </div>
                 ) : filteredProducts.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
                         {filteredProducts.map(product => (
                             <ProductCard
                                 key={product.id}

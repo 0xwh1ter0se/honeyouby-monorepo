@@ -18,7 +18,7 @@ export default function Navbar({ cartCount, toggleCart }) {
                         <img
                             src="/logo.png"
                             alt="HoneyOuby Logo"
-                            className="h-16 w-auto object-contain hover:scale-105 transition-transform duration-300 transform drop-shadow-sm"
+                            className="h-12 md:h-16 w-auto object-contain hover:scale-105 transition-transform duration-300 transform drop-shadow-sm"
                         />
                     </div>
 

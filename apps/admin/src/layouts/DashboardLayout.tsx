@@ -12,7 +12,7 @@ import {
     FileText
 } from 'lucide-react';
 import { Outlet, NavLink } from 'react-router-dom';
-import BottomNav from '../components/BottomNav';
+
 import { useAuth } from '../context/AuthContext';
 import { fetchOrders } from '../services/api';
 import { useNavigate } from 'react-router-dom';
@@ -59,7 +59,7 @@ export const DashboardLayout = () => {
     return (
         <div className="flex h-screen bg-[#F9FAFB] dark:bg-gray-900 transition-colors duration-300">
             {/* ... Sidebar ... */}
-            <aside className="w-64 bg-white dark:bg-gray-800 border-r border-gray-100 dark:border-gray-700 flex flex-col p-6 hidden md:flex transition-colors duration-300">
+            <aside className="w-64 bg-white dark:bg-gray-800 border-r border-gray-100 dark:border-gray-700 flex flex-col p-6 transition-colors duration-300">
                 {/* ... (No changes to sidebar content) ... */}
                 <div className="flex items-center gap-3 px-2 mb-10">
                     <div className="w-14 h-14 bg-gold/20 rounded-full flex items-center justify-center text-gold-dark shadow-sm overflow-hidden">
@@ -102,7 +102,7 @@ export const DashboardLayout = () => {
             {/* Main Content */}
             <div className="flex-1 flex flex-col overflow-hidden">
                 {/* Header */}
-                <header className="hidden md:flex h-20 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md px-8 items-center justify-between transition-colors duration-300 border-b border-gray-100 dark:border-gray-700">
+                <header className="flex h-20 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md px-8 items-center justify-between transition-colors duration-300 border-b border-gray-100 dark:border-gray-700">
                     <div>
                         <h2 className="text-2xl font-bold text-brown-dark dark:text-white flex items-center gap-2">
                             Welcome back, Admin!
@@ -136,7 +136,7 @@ export const DashboardLayout = () => {
                 </header>
 
                 {/* Page Content */}
-                <main className="flex-1 overflow-auto p-8 pb-24 md:pb-8">
+                <main className="flex-1 overflow-auto p-8 pb-8">
                     <Outlet />
                 </main>
             </div >
@@ -149,10 +149,7 @@ export const DashboardLayout = () => {
                 />
             )}
 
-            {/* Mobile Navigation */}
-            < div className="md:hidden" >
-                <BottomNav />
-            </div >
+
         </div >
     );
 };

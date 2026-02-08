@@ -19,7 +19,7 @@ export default function ProductCard({ product, addToCart, onViewDetails }) {
                 </div>
             </div>
 
-            <div className="p-5">
+            <div className="p-3 md:p-5">
                 <div className="flex justify-between items-start mb-2">
                     <h3 className="text-xl font-bold text-primary">{product.name}</h3>
                     <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full font-bold">
@@ -43,8 +43,8 @@ export default function ProductCard({ product, addToCart, onViewDetails }) {
                         onClick={() => product.stock > 0 && addToCart(product)}
                         disabled={product.stock === 0}
                         className={`p-2 rounded-full shadow-md flex items-center gap-1 px-4 transition-all ${product.stock === 0
-                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                : 'bg-primary text-secondary hover:bg-primary/90'
+                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                            : 'bg-primary text-secondary hover:bg-primary/90'
                             }`}
                     >
                         {product.stock === 0 ? (
